@@ -48,7 +48,6 @@ Wichtige Hinweise finden Sie auch in den [IT-Empfehlungen von IANUS](https://ian
 
 Bereits bei der Erstellung eines Tabellendatenblatts (z.B. in LibreOffice Calc) treffen Sie bewusst oder unbewusst Entscheidungen zu Metadaten, indem Sie z.B. das Format einer Zelle festlegen. Spätestens wenn mehrere Personen Daten in ein Tabellenblatt (oder eine Datenbank) eintragen, sollten alle über die jeweiligen Konditionen in Kenntnis gesetzt sein (z.B. erlaubte Werte, Skalierung von metrischen Einheiten, etc.), damit die Daten später analysierbar sind. Hier ist die Anlage eines Metadatenblatts zu den Attributen einer Tabelle bereits während der **Planung und Projektierung** hilfreich. Die Metadaten eines Tabellenblattes erlauben auch, die jeweiligen Beziehungen zwischen den verschiedenen Entitäten (z.B. Fund - Befund) nachzuvollziehen, was für die Abfrage und Analyse von Daten in der Phase des **Anreicherns und Auswertens** relevant ist. Für das **Archivieren und Sichern**, stellen viele (Langzeit-)Archive Minimalanforderungen an die Dokumentation der Metadaten. Schließlich trägt die nachvollziehbare Dokumentation Ihrer Datenbank wesentlich dazu bei, dass Ihre Ergebnisse und Daten **aufgefunden und wiederverwendet** werden können.
 
-## Inhaltliche Abschnitte
 
 ## Metadaten in (relationalen) Datenbanken
 
