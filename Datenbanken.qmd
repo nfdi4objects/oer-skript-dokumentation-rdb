@@ -1,0 +1,374 @@
+---
+title: "Skript zur Dokumentation von (relationalen) Datenbanken"
+subtitle: ""
+lang: de
+date: today
+date-format: "DD.MM.YYYY"
+date-modified: last-modified
+metadata-files:
+  - _layout.yml
+  - _autor_innen.yml
+  - _oer_metadata.yml
+# Optional
+bibliography: bibliographie.bib
+toc: true
+toc-expand: true
+toc-title: |
+  {{< brand logo large >}}
+toc-location: right
+number-sections: true # Auf false setzen, wenn keine automatische Abschnittsnummerierung gewünscht
+lightbox: true
+crossref: 
+  lof-title: "Liste der Abbildungen"
+# Für CI-build in github
+execute:
+  freeze: auto
+---
+
+## Einleitung
+
+In vielen Forschungsprojekten werden die Forschungsdaten in relationalen Datenbanken erfasst. Sowohl für den Import von Daten in die Datenbank als auch für die Dokumentation zur Nachnutzung müssen Sie diese mit Metadaten beschreiben.
+
+### Lernziele {.kolophon .unnumbered .unlisted}
+
+In diesem Skript lernen Sie die wichtigsten Begriffe zur Dokumentation von (relationalen) Datenbanken. Dieses Wissen hilft Ihnen bei der Planung einer eigenen Datenbank, der Nachnutzung von Datenbanken Dritter, sowie der Archivierung von Datenbanken.^[(@petersen2023: "Die Lernenden können vorbereitende Maßnahmen zur Übergabe von strukturierten Forschungsdaten bzw. relationalen Datenbanken an ein digitales Langzeitarchiv treffen." (LZ 04_002_0832)]
+
+### Vorwissen {.kolophon .unnumbered .unlisted}
+
+Für das Verständnis dieses Skripts wird Folgendes vorausgesetzt:
+
+- Sie können zwischen Datenbanken und strukturierten Tabellendaten unterscheiden. Sie wissen, was Normalisierung bedeutet und sind in der Lage, Ihre Daten entsprechend abzulegen. NFDI4Objects bietet auch ein [Skript zu Tabellendaten]({{< meta url_n4o_oer_tabellendaten >}}) an.
+- Sie haben bereits ein grundlegendes Verständnis zu Genese, Aufbau und Zweck von relationalen Datenbanken. Sollten Sie Ihre Kenntnisse zu relationalen Datenbanken noch einmal auffrischen wollen, finden Sie bei den Kolleg\:innen von [HERMES](https://hermes-hub.de/lernen/datacarpentrieslektionen/lektionen/relational-databases-with-nocodb-in-the-humanities.html) oder bei der [Uni München](https://dhvlab.gwi.uni-muenchen.de/manualDatabase.html) entsprechende Kurse. 
+- Sie wissen, was unter dem Begriff "Metadaten" zu verstehen ist. Auch hierfür gibt es ein [Skript von NFDI4Objects]({{< meta url_n4o_oer_metadaten >}}).
+
+Wichtige Hinweise finden Sie auch in den [IT-Empfehlungen von IANUS](https://ianus-fdz.de/it-empfehlungen/dateiformate/datenbanken/#dokumentation)
+
+
+### Bezug zum Forschungsdatenlebenszyklus {.kolophon .unnumbered .unlisted}
+
+Bereits bei der Erstellung eines Tabellendatenblatts (z.B. in LibreOffice Calc) treffen Sie bewusst oder unbewusst Entscheidungen zu Metadaten, indem Sie z.B. das Format einer Zelle festlegen. Spätestens wenn mehrere Personen Daten in ein Tabellenblatt (oder eine Datenbank) eintragen, sollten alle über die jeweiligen Konditionen in Kenntnis gesetzt sein (z.B. erlaubte Werte, Skalierung von metrischen Einheiten, etc.), damit die Daten später analysierbar sind. Hier ist die Anlage eines Metadatenblatts zu den Attributen einer Tabelle bereits während der **Planung und Projektierung** hilfreich. Die Metadaten eines Tabellenblattes erlauben auch, die jeweiligen Beziehungen zwischen den verschiedenen Entitäten (z.B. Fund - Befund) nachzuvollziehen, was für die Abfrage und Analyse von Daten in der Phase des **Anreicherns und Auswertens** relevant ist. Für das **Archivieren und Sichern**, stellen viele (Langzeit-)Archive Minimalanforderungen an die Dokumentation der Metadaten. Schließlich trägt die nachvollziehbare Dokumentation Ihrer Datenbank wesentlich dazu bei, dass Ihre Ergebnisse und Daten **aufgefunden und wiederverwendet** werden können.
+
+## Inhaltliche Abschnitte
+
+## Metadaten in (relationalen) Datenbanken
+
+Metadaten liefern Struktur- und Systeminformationen über die Datenbankobjekte:
+
+- ihre Tabellen, 
+- Spalten, 
+- Indizes, 
+- Constraints, 
+- Views, 
+- Trigger, 
+- Stored Procedures, 
+- Funktionen, 
+- Sequenzen, 
+- Synonyme, 
+- Rollen und Benutzer, 
+- Berechtigungen, 
+- Datentypen, 
+- Beziehungen zwischen Tabellen (z.B. Fremdschlüsselverweise),
+- Informationen zum physikalischen Speicherort, 
+- Informationen zur Performance,
+- Informationen zum Zugriffspfad.
+
+Sie ermöglichen so nicht nur die Verwaltung und Steuerung einer Datenbank (z.B. durch das Datenbankmanagementsystem – DBMS), sondern helfen auch anderen Forschenden, die Nutzbarkeit Ihrer Forschungsergebnisse für die eigene Arbeit einzuschätzen.
+Sie helfen beim Verstehen der Datenbankstruktur, erleichtern die Fehlersuche und unterstützen die Implementierung neuer Funktionalitäten (sofern die Datenbank weiterentwickelt wird).
+
+Ein weiterer wichtiger Aspekt in der Dokumentation relationaler Datenbanken betrifft den verwendeten SQL-Dialekt. Obwohl die Structured Query Language (SQL) als standardisierte Abfragesprache definiert ist (z. B. gemäß ISO/IEC 9075), implementieren verschiedene Datenbankmanagementsysteme (DBMS) diesen Standard in leicht unterschiedlicher Form. Dadurch ergeben sich Syntax-, Funktions- und Typabweichungen zwischen den Systemen.
+So verwendet MySQL beispielsweise eigene Datentypen und Funktionsnamen, während PostgreSQL erweiterte Funktionen für komplexe Datentypen und JSON-Verarbeitung bietet. Oracle Database wiederum unterstützt proprietäre PL/SQL-Erweiterungen, während Microsoft SQL Server Transact-SQL (T-SQL) mit spezifischen Steuerstrukturen und Systemfunktionen verwendet. Diese Unterschiede wirken sich unmittelbar auf die Portabilität, Wartung und Nachvollziehbarkeit von Datenbankstrukturen und Abfragen aus.
+
+Daher ist es in der Datenbankdokumentation zwingend erforderlich, das genaue Datenbankmanagementsystem inklusive Versionsnummer anzugeben. Nur so kann nachvollzogen werden, unter welchen technischen Rahmenbedingungen die Datenbank entwickelt und betrieben wurde und welche SQL-Dialektbesonderheiten für die Ausführung der Abfragen und Funktionen relevant sind. Dies ist insbesondere für Replikation, Weiterentwicklung und Reproduzierbarkeit wissenschaftlicher Arbeiten von zentraler Bedeutung.
+
+<!-- IANUS empfiehlt außerdem SQL:2008 als Standard zu benutzen und nichts, was danach kommt... ist aber vermutlich entgegen jeder Praxis-->
+
+### Umfang und Arten von Metadaten in (relationalen) Datenbanken
+
+| Kategorie                             | Beschreibung                                                             | Beispiele                                                         |
+| ------------------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| **Strukturelle Metadaten**            | Informationen über Tabellen, Spalten, Datentypen und Schlüssel           | Tabellennamen, Spaltennamen, Datentypen, Primärschlüssel          |
+| **Integritätsmetadaten**              | Regeln zur Wahrung der Datenqualität und Konsistenz                      | Fremdschlüssel, Unique Constraints, Not Null                      |
+| **Zugriffsmetadaten**                 | Informationen zu Berechtigungen und Rollen                               | Benutzerrechte, Rollen, Zugriffssteuerungen                       |
+| **Prozedurale Metadaten**             | Informationen zu gespeicherten Routinen und Automatismen                 | Stored Procedures, Trigger, Funktionen                            |
+| **Sicht- und Abfragemetadaten**       | Informationen zu abgeleiteten oder virtuellen Datenstrukturen            | Views, Materialized Views, definierte Abfragen                    |
+| **System- und Performance-Metadaten** | Technische und statistische Informationen zur Optimierung und Verwaltung | Tabellenstatistiken, Indexnutzung, Ausführungspläne, Speicherorte |
+| **Semantische Metadaten**             | Beschreibende Informationen zu Bedeutung und Herkunft der Daten          | Kommentare, Beschreibungen, Datenherkunft (Provenance)            |
+
+## Dokumentation von Datenbanken
+
+Folgende Komponenten gehören nach zur Dokumentation einer Datenbank^[modifiziert nach [IANUS](https://ianus-fdz.de/it-empfehlungen/dateiformate/datenbanken/#dokumentation)]:
+
+- **Anforderungsanalyse**: Beschreibung, welche Anforderungen an die fertige Datenbank gestellt werden - ergo: *"Wozu dient die Datenbank?"*, *"Welche Funktionen soll sie daher haben?"*, *"Wer wird die Datenbank später nutzen?"* etc. Die Anforderungsanalyse sollte bereits in der Phase der Projektplanung erfolgen, weil sich hiervon viele Konsequenzen für die Struktur der Datenbank (Architektur/Beziehungen), Aufbau des Front Ends, etc. ableiten.
+- **Datenbankinhalte**: Die einzelnen Beobachtungen, bzw. Datensätze, können in unterschiedlichen Formaten abgelegt werden. Gerne greifen Forschende hier zu tabellarischen Formaten, in welchem Fall sich ein Standard wie `.csv` eignet (weniger geeignet sind `.xls`-Dateien). Ideal ist die Archivierung in Datenbankformaten, in denen Struktur und Inhalte gemeinsam gespeichert sind (bspw. `.sql`-Dump).
+- **Beschreibung der Datenstruktur**: Die Datenstruktur kann visuell (z.B. Entity-Relationship-Diagram), sprachlich (z.B. Metadatenblätter mit Primär- und Fremdschlüsseln) und maschinenlesbar (z.B. DDL-Dateien) erfolgen.
+- **Definition der implementierten Funktionalitäten**: Beschreibung  der verfügbaren Operationen, Schnittstellen und internen MEchanismen (z.B. Trigger, Backup-Prozesse, Fehlerbehandlung).
+- **semantisch-inhaltliche Aspekte**: Dokumentation der verwendeten Wertelisten, kontrollierten Vokabulare, Thesauri oder Ontologien, sowie gegebenenfalls eigener Begriffsdefinitionen, um die semantische Nachvollziehbarkeit zu sichern.
+- **Dokumentation der grafischen Benutzeroberflächen und Sicht auf die Daten**: Screenshots oder Beschreibungen von Eingabemasken, Suchfunktionen und Visualisierungen der Datenansichten.
+- **Versionierung und Änderungsprotokolle**: Dokumentation von Änderungen an der Datenbankstruktur (z. B. neue Tabellen, geänderte Datentypen, Anpassung von Constraints) und deren zeitlicher Verlauf. Hierzu gehört auch die Angabe der verwendeten DBMS-Version (Hersteller, Version) sowie von ggf. eingesetzten Erweiterungen oder Plug-ins.
+- **Technische Rahmenbedingungen**: Angaben zum eingesetzten Datenbankmanagementsystem (Hersteller, Version), zum Betriebssystem, zur verwendeten Kodierung (z. B. UTF-8) sowie zu Serverkonfigurationen, falls relevant (z. B. Zugriffsrechte, Backup-Strategie).
+- **Sicherheits- und Zugriffskonzept**: Beschreibung der implementierten Rollen, Benutzergruppen und Rechte, insbesondere wenn sensible oder personenbezogene Daten vorliegen.
+
+Bislang kann kein gängiges Dateiformat alle diese Aspekte gleichzeitig abdecken, daher muss man bei der Dokumentation von Datenbanken auf eine "hybride Archivierungsstrategie"^[https://ianus-fdz.de/it-empfehlungen/dateiformate/datenbanken/#dokumentation] setzen. 
+
+## Minimaldatensätze Metadaten zu Datenbanken
+
+Im Folgenden stellen wir Ihnen die von [IANUS](https://ianus-fdz.de/it-empfehlungen/dateiformate/datenbanken/#relationale-datenbanken) empfohlenen Minimaldatensätze für Metadaten von Datenbanken vor. Dabei wird zwischen den Metadaten zur Datenbank selbst, zu den Tabellen und zu den Attributen einer jeden Tabelle unterschieden.
+
+::: callout.note
+Die Anforderungen an Metadaten können je nach Archiv variieren. So unterscheiden sich z.B. die [vom Archaeology Data Service bereitgestellten Metadatenblätter](https://archaeologydataservice.ac.uk/app/uploads/2022/04/ADS_database_metadata_example.pdf) von den IANUS-Empfehlungen. Machen Sie sich **frühzeitig** Gedanken, wo Sie ihre Datenbank archivieren wollen, sodass Sie entsprechende Metadaten früh im Projektverlauf anlegen können.
+:::
+
+::: panel-tabset
+
+### Datenbank
+
+| Metadatum | Beschreibung |
+|-----------|-------------------|
+| Datenbankname | Ansprache / Name der Datenbank            |
+| Beschreibung der Datenbank | Zusammenfassung über Zweck, Bedeutung und Inhalt der Datenbank               |
+| Sprache | Liste der Sprachen, in welchen die Daten eingegeben wurden sowie Sprachkennungen nach ISO 639 angeben |
+| Identifikator	| Falls die Datenbank online öffentlich zugänglich ist, sollte ein persistenter Identifikator (z.B. DOI, URI) oder eine eindeutige Adresse (z.B. URL) angegeben werden |
+| Rechteinhabende	| Falls die Datenbank online öffentlich zugänglich ist, sollte ein persistenter Identifikator (z.B. DOI, URI) oder eine eindeutige Adresse (z.B. URL) angegeben werden. |
+| DBMS	| Name des Datenbankmanagementsystems mit Versionsnummer mit der die Datenbank betrieben wurde. |
+| Schemata Liste	| Liste der Schemata innerhalb der Datenbank sofern vorhanden. |
+| Nutzende	| Liste der Nutzerinnen und Nutzer und ihrer Rolle innerhalb der Datenbank. |
+| Rolle	| Liste der verschiedenen Rollen und Gruppen mit ihren definierten Zugriffsrechten. |
+| Standard	| Name und Version verwendeter Standards, etwa zur Definition des Datentyps eines Attributs, zur Dokumentation von Abfragen oder zu dem Datenbankformat, z.B. SQL:2008 oder SIARD 2.0. |
+| Abgeleitete Dateien	| Aus den Datenbankinhalten erzeugte Grafiken, Abbildungen, Diagramme müssen zusätzlich separat archiviert und gelistet werden. |
+| Weitere Dateien	| Liste weiterer Dokumente, die für das Verständnis und die Dokumentation einer Datenbank notwendig sind, wie beispielsweise ein ERD oder ein Benutzerhandbuch. | 
+
+### Tabellen
+
+Auch die einzelnen Komponenten der Datenbank ("Tabellen") sollten dokumentiert werden. IANUS schlägt folgende Informationen als Minimaldatensatz vor:
+
+| Tabelle Metadatum | Beschreibung |
+|-------------------|--------------|
+| Tabelle Name	| Name der Tabelle |
+| Tabelle Beschreibung	| Bedeutung und Inhalt der Tabelle |
+| Anzahl Datensätze	| Anzahl der Datensätze in der Tabelle |
+| Attributliste	| Liste der Attribute in der Tabelle |
+
+### Attribute
+
+Die einzelnen Attribute der in den Tabellen einer Datenbank enthaltenen Beobachtungen sollen nach IANUS mit folgenden Metadaten beschrieben werden:
+
+| Attribut Metadatum | Beschreibung |
+|--------------------|--------------|
+| Attribut Name	| Name des Attributs |
+| Attribut Beschreibung | Bedeutung und Inhalt des Attributs. Wird das Attribut mit Hilfe von Einheiten, z. B. metrische Maßeinheiten, ausgedrückt, ist die Angabe der Einheit erforderlich |
+| Attribut Typ	| Datentyp des Attributs nach einem einheitlich festgelegtem Standard (Syntax Standard) z. B. "Integer" nach SQL:2008 |
+| Kontrolliertes Vokabular	| Sofern für das Attribut eine Werteliste vorliegt oder ein Thesaurus verwendet wurde, ist dieses zu dokumentieren |
+| Attribut Schlüssel	| Sofern es sich um ein Schlüsselattribut handelt, Benennung der Schlüsselart z. B. Primär- oder Fremdschlüssel | 
+| Fremdschlüssel Referenz	| Im Falle eines Fremdschlüssels Angabe des referenzierten Attributs mit Angabe der Tabelle und des Schemas |
+
+:::
+
+## Ergänzende Informationen
+
+### Entity-Relationship Diagram
+
+Eine schnelle Übersicht über die Struktur einer Datenbank bietet das Entity-Relationship Diagram (ER-Diagram, auch ER-Modell), in dem die Tabellen mitsamt Attributen und deren Datentyp, sowie die Beziehungen der Tabellen untereinander grafisch dargestellt werden. Viele Datenmanagementtools haben bereits entsprechende Export-Möglichkeiten integriert. Es empfielt sich, das ER-Diagram als Bilddatei mit zu archivieren, damit Dritte sich schnell einen Überblick über Aufbau und Struktur der Datenbank machen können.
+
+### DDL
+
+DDL steht für "**D**ata **D**escription **L**anguage" und beschreibt die Befehle zur Definition der Datenbankstruktur (Erstellen von Tabellen und Indizes). Wenn Sie die Architektur Ihrer Datenbank für Dritte zur Verfügung stellen wollen, empfiehlt es sich, die DDL zu archivieren. Manche Programme bieten hierfür automatisierte Exporte, allerdings handelt es sich dabei oft um proprietäre Software.
+
+## Datenbankinhalte
+
+Sofern die Datenbankinhalte nicht bereits in der Datenbankdatei (bspw. .sqlite) mit abgelegt sind, müssen diese in einem geeigneten Format mit abgelegt werden. Hier eignen sich besonders textbasierte Formate wie `.csv`.
+
+### Database Dumps
+
+Ein Database Dump (Datenbank-Dump) ist eine Kopie oder ein Export einer Datenbank zu einem bestimmten Zeitpunkt. Er wird oft verwendet für Backup-Zwecke, Migrationen oder Analysen.
+
+Ein Dump enthält typischerweise:
+
+- alle Tabellen und deren Daten
+- Strukturen wie Spalten, Indizes, Views, Trigger usw.
+- manchmal auch Benutzerrechte oder andere Metadaten
+
+Dumps können in verschiedenen Formaten vorliegen:
+
+- SQL-Dump: Eine Textdatei mit SQL-Befehlen (`CREATE TABLE`, `INSERT INTO` usw.), die die Datenbank wiederherstellen können
+Beispiel: mysqldump mydb > mydb.sql
+- Binärformat: Manche Datenbanken (z. B. PostgreSQL) können Dumps in komprimierten binären Formaten speichern, die schneller importiert werden
+
+Dumps kommen in unterschiedlichen Verwendungsfällen zum Einsatz: 
+
+- als Backup, um Daten im Falle eines Ausfalls wiederherzustellen
+- für die Migration, um Daten von einem Server auf einen anderen zu übertragen,
+- für die Analyse und/oder Entwicklung, um eine Kopie der Produktionsdatenbank in einer Entwicklungsumgebung zu nutzen.
+- zur Wiederherstellung: ein Dump kann mit dem entsprechenden Datenbank-System wieder eingelesen werden, um die Datenbank zu rekonstruieren.
+
+Die Optionen von Database Dumps unterscheiden sich dabei zwischen verschiedenen Datenbankmanagementsystemen (DBMS):
+
+::: panel-tabset
+
+#### MySQL / MariaDB
+
+Dump-Formate:
+
+- SQL-Dump (Textformat):
+
+    - Standardformat
+    - enthält `CREATE TABLE`, `INSERT INTO`, ggf. `DROP TABLE` Befehle
+    - Vorteil: portabel, menschlich lesbar
+    - Nachteil: bei sehr großen Datenbanken langsamer zu importieren
+
+- Binär-Backups (mit `mysqlpump` oder `mysqlpump --tab`)
+
+    - `mysqlpump` ist schneller für große Datenbanken
+    - `--tab` erstellt separate Dateien für Tabellen + Inserts
+    - Vorteil: schnelleres Wiederherstellen bei großen Datenmengen
+
+Besonderheiten:
+
+- MySQL-Dumps sind textbasiert, portabel, funktionieren auf anderen MySQL-Servern
+- kann nur Daten, nur Struktur oder beides exportieren (`--no-data`, `--no-create-info`)
+
+#### PostgreSQL
+
+Dump-Formate:
+
+- SQL-Dump (Plain Text)
+
+    - mit `pg_dump mydb > mydb.sql`
+    - menschlich lesbar, enthält SQL-Befehle
+
+- Custom Format (binär)
+
+    - mit `pg_dump -Fc mydb > mydb.dump`
+    - Vorteile:
+
+        - komprimiert
+        - flexible Wiederherstellung (z. B. nur bestimmte Tabellen)
+        - schnellere Importe mit `pg_restore`
+
+- Directory Format
+
+    - mit `pg_dump -Fd mydb -f dump_dir/`
+    - Dump wird als Verzeichnis mit vielen Dateien gespeichert
+    - ideal für parallele Wiederherstellung (`pg_restore -j`).
+
+Besonderheiten:
+
+- PostgreSQL-Dumps können nur bestimmte Tabellen oder Schemas selektiv wiederherstellen, wenn Custom/Directory Format benutzt wird
+- Binäre Formate sind nicht menschlich lesbar, SQL-Dumps schon
+
+#### SQLite
+
+Dump-Formate:
+
+- SQL-Dump (Text)
+
+    - mit dem Kommando `sqlite3 mydb.db .dump > mydb.sql`
+    - enthält `CREATE TABLE`, `INSERT INTO`, `CREATE INDEX` usw.
+    - Vorteil: portabel, plattformunabhängig
+
+- Binary Copy
+
+    - SQLite-Datenbanken sind eine einzelne Datei, die man direkt kopieren kann
+    - Vorteil: extrem einfach für Backups
+    - Nachteil: kann nicht selektiv wiederherstellen (außer über `.dump`).
+
+Besonderheiten:
+
+- SQLite ist file-based, kein Server nötig
+- oft reicht einfaches Kopieren der DB-Datei für Backups
+
+#### Microsoft SQL Server (MSSQL)
+
+Dump-Formate:
+
+- SQL Script (Text)
+
+    - mit SQL Server Management Studio (SSMS) kann man Generate Scripts wählen
+    - enthält `CREATE TABLE`, `INSERT INTO`, etc.
+
+- Backup File (`.bak`)
+
+    - binäres, proprietäres Format
+    - erzeugt mit `BACKUP DATABASE mydb TO DISK='C:\backup\mydb.bak'`
+    - Vorteile:
+
+        - enthält gesamte Datenbank inkl. Transaktionslog
+        - schnelle Wiederherstellung
+
+- BACPAC
+
+    - enthält Schema + Daten, für Azure SQL oder Migration
+
+- DACPAC
+
+    - nur Schema, keine Daten
+
+Besonderheiten:
+
+- MSSQL favorisiert binäre Backups für produktive Umgebungen
+- SQL-Scripts eher für Migrationen oder Entwicklungsumgebungen
+
+#### Vergleichstabelle der Formate
+
+| DBMS       | Text / SQL Dump | Binär / Custom        | Besonderheiten                           |
+| ---------- | --------------- | --------------------- | ---------------------------------------- |
+| MySQL      | `mysqldump` SQL | `mysqlpump`, `--tab`  | portabel, flexibel, Text lesbar          |
+| PostgreSQL | `pg_dump` SQL   | `pg_dump -Fc/-Fd`     | selektive Wiederherstellung, parallel    |
+| SQLite     | `.dump` SQL     | Datei direkt kopieren | einfach, portabel, file-based            |
+| MSSQL      | SQL Script      | `.bak`, BACPAC/DACPAC | binär sehr schnell, Script für Migration |
+
+:::
+
+## Ausblick
+
+Weitere, anschließende Themen sind bspw. die Dokumentation von Graphdatenbanken.
+
+## Weiterführende Quellen und Informationen {.appendix .unnumbered}
+
+<!-- Der Ort für weiterführende Quellen und Informationen. Wenn Sie Fußnoten oder Literaturverweise im Text eingefügt haben, werden die bibliographischen Angaben automatisch in weiteren Abschnitten generiert und in das Dokument eingefügt. -->
+
+## Nachnutzen {.appendix .unnumbered}
+
+Alle sind herzlich eingeladen, diesen Baustein und die zugehörige Copyleft-Lizenz zu nutzen, um ihr Wissen und Expertise in die Verbesserung und Aktualisierung einzubringen. Alle können die Inhalte erweitern oder überarbeiten, zum Beispiel um Anwendungsszenarien und Nutzungskontexte zu erweitern.
+
+Unser Wunsch ist ein lebendiges, stetig wachsendes Dokument, das sich durch die Beiträge vieler verändert - im Einklang mit eines sich wandelnden Umfelds. Wir freuen uns im Falle einer Überarbeitung über eine kurze Notiz – das ist aber selbstverständlich keine Pflicht.
+
+<!-- Verweise auf Website und Repository werden in _oer_metadata.yml global festgelegt. Wenn die OER nicht in einem git-Repository gehostet oder online bereitgestellt werden, können die folgenden zwei Zeilen gelöscht werden. -->
+
+:link: [Dieser Baustein als Website]({{< meta site-url >}}) 
+
+:link: [Quarto-Quellcode dieses Bausteins]({{< meta repo-url >}})
+
+---
+
+Dieses Skript nutzt das [OER-Skript-Template von NFDI4Objects](https://github.com/nfdi4objects/oer-template-skript)
+
+## Disclaimer: Einsatz von LLM {.appendix .unnumbered}
+
+Bei der Erstellung dieses Templates wurden keine KI-basierten Werkzeuge eingesetzt.
+
+<!-- Optionale Angaben zum Einsatz von LLM bei der Erstellung oder Überarbeitung des Skripts -->
+
+<!-- An dieser Stelle werden von Quarto automatisch generierte Abschnitte angehängt:
+
+Bibliographie:
+Erstellt aus den in der qmd-Datei mit [@bibtex-Schlüssel] referenzierten Einträgen aus der Datei bibliographie.bib.
+Im Text nicht referenzierte Einträge aus der bibliographie.bib werden nicht zitiert.
+Der Zitierstil wird in der _oer_metadata.yml mit dem Schlüssel 'csl:' festgelegt. Im Verzeichnis /assets/csl/ sind gängige Zitierstile als csl-Datei vorhanden. Weitere sind hier zu finden: https://www.zotero.org/styles
+
+Lizenz:
+Angabe wird übernommen aus Schlüssel 'license:' in _oer_metadata.yml
+
+Urheber:innen
+Angabe wird übernommen aus der _oer_metadata.yml Schlüssel 'copyright:'
+
+Zitiervorschläge
+Mit BibTeX zitieren:
+Automatisch von Quarto aus den Metadaten insb. aus dem Schlüssel 'citation:' in der _oer_metadata.yml generiertes bibtex-Zitat.
+
+Bitte zitieren Sie diesen OER-Baustein als:
+Angabe generiert aus:
+  _autor_innen.yml
+  Schlüssel 'title:' in der qmd-Datei
+  Schlüssel 'issued' in der _oer_metadata.yml
+  Schlüssel 'doi:' in der _oer_metadata.yml / Wenn keine doi gesetzt wird der Titel mit dem Wert aus 'site-url:' in _oer_metadata.yml verlinkt.
+-->
