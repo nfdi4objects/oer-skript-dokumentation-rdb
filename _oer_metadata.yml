@@ -26,9 +26,9 @@ keywords:
   - Nachnutzung
 
 # Technische Metadaten
-site-url: &site https://nfdi4objects.github.io/oer-template-skript/
-repo-url: &repo https://github.com/nfdi4objects/oer-template-skript
-doi: XXXXXXX.XXXXXXX
+site-url: &site https://nfdi4objects.github.io/oer-skript-dokumentation-rdb/
+repo-url: &repo https://github.com/nfdi4objects/oer-skript-dokumentation-rdb/
+# doi: XXXXXXX.XXXXXXX
 
 # Vorgaben für den Appendix "Zitat"
 csl: assets/csl/internet-archaeology.csl # Verweis auf CSL-Datei mit Zitierformat. Weitere CSL-Dateien im Verzeichnis assets/csl/. Fehlende CSL-Dateien können hier heruntergeladen werden: https://www.zotero.org/styles
@@ -36,15 +36,14 @@ csl: assets/csl/internet-archaeology.csl # Verweis auf CSL-Datei mit Zitierforma
 citation:
   type: document
   container-title: "Open Educational Resource"
-  publisher: Institution
+  publisher: Hochschule Mainz
   issued: 2026
   url: *site
   license: "https://creativecommons.org/licenses/by/4.0/"
 
 # Rechtliche Metadaten
-copyright: "Freitext-Angaben zu Inhaber:innen des Urheberrechts an den Inhalten (Anzupassen im Schlüssel `copyright` in der Datei `_oer_metadata.yml`)"
-license: CC BY # # Optionen für Lizensierungsangaben: https://quarto.org/docs/authoring/front-matter.html#license. Wird übernommen in automatisch erstellten Appendix "Lizenz".
-
+copyright: "Henrike Backhaus, Kai-Christian Bruhn"
+license: CC BY
 # Spezifische Metadaten für den Export in fachliche Metadatenschemata
 
 # OERSI (vgl. https://oersi.gitlab.io/metadata-form/metadata-generator.html)
@@ -55,7 +54,6 @@ status: Draft  # Draft, Incomplete, Published
 # Schema für eigene Key-Value-Paare mit Bindestrich: custom-key: "custom-value"
 beispiel-key: beispiel-value
 # Shortcuts für Verweise auf verlinkte OER-Bausteine für die Nutzung im Text. Beispiel:
-# url_n4o-oer_metadaten: https://gitlab.rlp.net/n4o/oer-bausteine/n4o-oer-skript-einfuehrung-metadaten'
+url_n4o-oer_metadaten: https://nfdi4objects.github.io/oer-skript-metadaten/
 # Referenz  im Text: {{< meta url_n4o-oer_metadaten >}}
-
 template-doku-url: https://nfdi4objects.github.io/oer-template-dokumentation/
